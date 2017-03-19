@@ -97,4 +97,38 @@ class HtmlHelper extends \Cake\View\Helper\HtmlHelper
 
         return $this->tag($tag, $text, $this->injectClasses($classes, $options));
     }
+
+
+    public function aclLink($title, $url = null, $options = array(), $confirmMessage = false)
+    {
+        return parent::link($title, $url, $options, $confirmMessage);
+    }
+
+    public function buttonGroup($buttons = array(), $class = null)
+    {
+        if (!is_array($buttons)) {
+            $buttons = (array)$buttons;
+        }
+        $class = (null == $class ? 'btn-group' : "{$class}");
+        $out = '';
+        $options = array(
+            'text' => 'undefined',
+            'class' => 'btn btn-default'
+        );
+        foreach ($buttons as $button) {
+            if (!is_array($button)) {
+                $button = array(
+                    'text' => $button
+                );
+            }
+            $text = $button['text'];
+            unset($button['text']);
+            $options['class'] = (!isset($button['class']) ? 'btn btn-default' : "btn {$button['class']}");
+            $options = array_merge($options, $button);
+            $out .= $this->tag('button', $text, $options);
+        }
+        $out = $this->div($class, $out);
+
+        return $out;
+    }
 }
